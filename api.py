@@ -27,12 +27,12 @@ def generate_response():
             return jsonify({'error': 'No JSON data received'}), 400
 
         prompt = data.get('message', 'Bonjour, comment puis-je vous aider aujourd\'hui ?')
-        logger.error(f"Prompt reçu: {prompt}")
+        logger.error(f"Prompt reçu: {prompt[:50]}")  # Limiter la longueur du log
 
-        inputs = tokenizer(prompt, return_tensors='pt', truncation=True, max_length=512, padding='max_length')
-        output_sequences = model.generate(inputs['input_ids'], max_new_tokens=50, num_return_sequences=1, attention_mask=inputs['attention_mask'])
+        inputs = tokenizer(prompt, return_tensors='pt', truncation=True, max_length=256, padding='max_length')
+        output_sequences = model.generate(inputs['input_ids'], max_new_tokens=30, num_return_sequences=1, attention_mask=inputs['attention_mask'])
         response = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
-        logger.error(f"Réponse générée: {response}")
+        logger.error(f"Réponse générée: {response[:50]}")  # Limiter la longueur du log
 
         return jsonify({'response': response})
 
