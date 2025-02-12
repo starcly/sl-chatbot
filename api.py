@@ -31,6 +31,12 @@ def generate_response():
 
     return jsonify({'response': response})
 
+# Ajout d'une route de test
+@app.route('/test', methods=['GET'])
+def test():
+    logger.info("Accès à la route de test")
+    return jsonify(message="Test route is working!")
+
 # Fonction handler pour Vercel
 def handler(event, context):
     logger.info("Nouvelle requête reçue par le handler")
