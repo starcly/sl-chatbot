@@ -7,7 +7,6 @@ app = Flask(__name__)
 tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")
 model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 
-# Définir le token de padding si nécessaire
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
 
@@ -22,5 +21,6 @@ def generate_response():
 
     return jsonify({'response': response})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# Fonction handler pour Vercel
+def handler(event, context):
+    return app(event, context)
