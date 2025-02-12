@@ -3,9 +3,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 app = Flask(__name__)
 
-# Charger le modèle DialoGPT et le tokenizer
-tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
-model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+# Charger le modèle DialoGPT-small et le tokenizer
+tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")
+model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 
 # Définir le token de padding si nécessaire
 if tokenizer.pad_token is None:
