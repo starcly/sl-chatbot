@@ -19,22 +19,31 @@ if tokenizer.pad_token is None:
 
 @app.route('/api', methods=['POST'])
 def generate_response():
-    logger.info("Requête reçue")
-    data = request.get_json()
-    prompt = data.get('message', 'Bonjour, comment puis-je vous aider aujourd\'hui ?')
-    logger.info(f"Prompt reçu: {prompt}")
+    logger.info("Requête reçue sur /api")
+    try:
+        data = request.get_json()
+        if not data:
+            logger.error("Aucune donnée JSON reçue")
+            return jsonify({'error': 'No JSON data received'}), 400
 
-    inputs = tokenizer(prompt, return_tensors='pt', truncation=True, max_length=512, padding='max_length')
-    output_sequences = model.generate(inputs['input_ids'], max_new_tokens=50, num_return_sequences=1, attention_mask=inputs['attention_mask'])
-    response = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
-    logger.info(f"Réponse générée: {response}")
+        prompt = data.get('message', 'Bonjour, comment puis-je vous aider aujourd\'hui ?')
+        logger.info(f"Prompt reçu: {prompt}")
 
-    return jsonify({'response': response})
+        inputs = tokenizer(prompt, return_tensors='pt', truncation=True, max_length=512, padding='max_length')
+        output_sequences = model.generate(inputs['input_ids'], max_new_tokens=50, num_return_sequences=1, attention_mask=inputs['attention_mask'])
+        response = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+        logger.info(f"Réponse générée: {response}")
+
+        return jsonify({'response': response})
+
+    except Exception as e:
+        logger.error(f"Erreur lors du traitement de la requête: {e}")
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 # Ajout d'une route de test
 @app.route('/test', methods=['GET'])
 def test():
-    logger.info("Accès à la route de test")
+    logger.info("Accès à la route de test /test")
     return jsonify(message="Test route is working!")
 
 # Fonction handler pour Vercel
